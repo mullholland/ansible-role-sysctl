@@ -1,0 +1,64 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    sysctl_dependencies_map:
+      CentOS: "procps-ng"
+      RedHat: "procps-ng"
+      Fedora: "procps-ng"
+      Rocky: "procps-ng"
+      AlmaLinux: "procps-ng"
+      Amazon: "procps-ng"
+      Debian: "procps"
+      Ubuntu: "procps"
+    sysctl_dependencies: "{{ sysctl_dependencies_map[ansible_distribution][ansible_distribution_major_version] | default(sysctl_dependencies_map[ansible_distribution]) }}"
+
+    sysctl_settings:
+      - name: "vm.swappiness"
+        value: 10
+        state: "present"
+        reload: "true"
+        ignoreerrors: false
+        sysctl_file: "/etc/sysctl.conf"
+        sysctl_set: true
+      - name: vm.vfs_cache_pressure
+        value: 50
+      - name: "net.ipv4.ip_forward"
+        value: 1
+
+  tasks:
+    - name: SmokeTests
+      ansible.builtin.debug:
+        msg:
+          - "ansible_version => {{ansible_version}}"
+          - "ansible_distribution => {{ ansible_distribution }}"
+          - "ansible_distribution_major_version => {{ ansible_distribution_major_version }}"
+          - "ansible_os_family  => {{ ansible_os_family}}"
+          - "ansible_system  => {{ ansible_system }}"
+
+    - name: Test if sysctl dependencies are installed
+      ansible.builtin.package:
+        name: "{{ sysctl_dependencies }}"
+        state: present
+      check_mode: true
+      register: nginx_sysctl_dependencies
+      failed_when: (nginx_sysctl_dependencies is changed) or (nginx_sysctl_dependencies is failed)
+
+    - name: Check sysctl settings
+      ansible.posix.sysctl:
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+        state: "{{ item.state | default('present') }}"
+        ignoreerrors: "{{ item.state | default('false') }}"
+        reload: "{{ item.state | default('true') }}"
+        sysctl_file: "{{ item.state | default('/etc/sysctl.conf') }}"
+        sysctl_set: true
+      with_items: "{{ sysctl_settings }}"
+      when:
+        - ansible_virtualization_type != "docker"
+        - ansible_virtualization_type != "containerd"
+      check_mode: true
+      register: nginx_sysctl_settings
+      failed_when: (nginx_sysctl_settings is changed) or (nginx_sysctl_settings is failed)

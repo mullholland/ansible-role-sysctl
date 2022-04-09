@@ -1,0 +1,12 @@
+---
+sysctl_dependencies_map:
+  CentOS: "procps-ng"
+  RedHat: "procps-ng"
+  Fedora: "procps-ng"
+  Rocky: "procps-ng"
+  AlmaLinux: "procps-ng"
+  Amazon: "procps-ng"
+  Debian: "procps"
+  Ubuntu: "procps"
+
+sysctl_dependencies: "{{ sysctl_dependencies_map[ansible_distribution][ansible_distribution_major_version] | default(sysctl_dependencies_map[ansible_distribution]) }}"

@@ -1,0 +1,21 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    sysctl_settings:
+      - name: "vm.swappiness"
+        value: 10
+        state: "present"
+        reload: "true"
+        ignoreerrors: false
+        sysctl_file: "/etc/sysctl.conf"
+        sysctl_set: true
+      - name: vm.vfs_cache_pressure
+        value: 50
+      - name: "net.ipv4.ip_forward"
+        value: 1
+
+  roles:
+    - role: "ansible-role-sysctl"

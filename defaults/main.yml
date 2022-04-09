@@ -1,0 +1,17 @@
+---
+# Reload the sysctl after cahnging values
+# /sbin/sysctl -p
+sysctl_reload: true
+
+sysctl_settings: []
+#  - name: "vm.swappiness"            # required
+#    value: 10                        # required
+#    state: "present"                 # optional => default('present')
+#    reload: "true"                   # optional => default('true')
+#    ignoreerrors: false              # optional => default('false')
+#    sysctl_file: "/etc/sysctl.conf"  # optional => default('/etc/sysctl.conf')
+#    sysctl_set: true                 # optional => default('false')
+#  - name: vm.vfs_cache_pressure
+#    value: 50
+#  - name: "net.ipv4.ip_forward"
+#    value: 1

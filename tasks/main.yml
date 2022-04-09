@@ -1,0 +1,20 @@
+---
+- name: Install sysctl dependencies
+  ansible.builtin.package:
+    name: "{{ sysctl_dependencies }}"
+    state: present
+
+- name: Set sysctl settings
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: "{{ item.state | default('present') }}"
+    ignoreerrors: "{{ item.ignoreerrors | default('false') }}"
+    reload: "{{ item.reload | default('true') }}"
+    sysctl_file: "{{ item.sysctl_file | default('/etc/sysctl.conf') }}"
+    sysctl_set: "{{ item.sysctl_set | default('false') }}"
+  with_items: "{{ sysctl_settings }}"
+  when:
+    - ansible_virtualization_type != "docker"
+    - ansible_virtualization_type != "containerd"
+
