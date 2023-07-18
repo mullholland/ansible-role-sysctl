@@ -1,8 +1,4 @@
 ---
-# Reload the sysctl after cahnging values
-# /sbin/sysctl -p
-sysctl_reload: true
-
 sysctl_settings: []
 #  - name: "vm.swappiness"            # required
 #    value: 10                        # required
