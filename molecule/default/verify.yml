@@ -59,6 +59,7 @@
       when:
         - ansible_virtualization_type != "docker"
         - ansible_virtualization_type != "containerd"
+        - ansible_virtualization_type != "container"
       check_mode: true
       register: nginx_sysctl_settings
       failed_when: (nginx_sysctl_settings is changed) or (nginx_sysctl_settings is failed)
