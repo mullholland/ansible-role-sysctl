@@ -1,7 +1,6 @@
 ---
 - name: Converge
   hosts: all
-  become: true
   gather_facts: true
   vars:
     sysctl_settings:
@@ -23,4 +22,4 @@
         msg: "{{ ansible_virtualization_type }}"
 
   roles:
-    - role: "ansible-role-sysctl"
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"

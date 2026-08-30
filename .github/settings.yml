@@ -5,4 +5,4 @@
 repository:
   description: Configure sysctl settings
   homepage: https://mullholland.net
-  topics: cloud, development, networking, packaging, system, ansible, molecule, tox, playbook
+  topics: cloud, development, networking, packaging, system, ansible, molecule, playbook
